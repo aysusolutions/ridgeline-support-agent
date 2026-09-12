@@ -1,0 +1,20 @@
+{
+  "name": "A bare order number as the first message opens the tracking flow",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "RO-10482",
+      "expect": {
+        "asks": "email"
+      }
+    },
+    {
+      "user": "lee.tanaka@example.com",
+      "expect": {
+        "status": "OK",
+        "cardKind": "order"
+      }
+    }
+  ],
+  "finalStateDiff": []
+}

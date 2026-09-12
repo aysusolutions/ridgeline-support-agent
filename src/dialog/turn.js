@@ -206,8 +206,24 @@ export function createAgent ({ db, clock = () => Date.now(), ai = nullAdapter, m
       return { ...digression, reply: `${digression.reply}\n\nNow, back to it — ${ASK_COPY[held.ask]}` }
     }
 
+    // Nothing pending — but a FIRST message can still carry its own identity, and until
+    // now nothing on this path looked. planFor fills slots only when session.pending is
+    // set AND rawText is threaded through, and route() passes neither, so "where is my
+    // order RO-10482" was answered with "what's the order number?". The entities were
+    // extracted a few lines above and then dropped on the floor.
+    const failed = seedIdentity(found)
+    if (failed) return failed
+
+    // A bare order number is not an unrecognised utterance — the composer's own
+    // placeholder invites it ("Order number, or ask anything"). Treat it as the question
+    // it plainly is rather than sending it to the fallback ladder.
+    if (found.orderIds.length && BARE_ORDER_ID.test(text)) return route('track_order')
+
     return handleFresh(text)
   }
+
+  // "RO-10482", "order RO-10482", "#RO-10482" — an id and nothing else meaningful.
+  const BARE_ORDER_ID = /^[\s#:.]*(?:order\s*)?RO[-\s]?\d{5}[\s.!?]*$/i
 
   async function handleFresh (text, opts = {}) {
     const { intent, confidence } = classify(text)
@@ -667,24 +683,52 @@ export function createAgent ({ db, clock = () => Date.now(), ai = nullAdapter, m
 
   /* --------------------------------------------------------------- slot filling */
 
+  // Identity is verified in CODE. The model has no part in minting a grant.
+  //
+  // Both ways of learning an identity land here — answering a slot we asked for, and
+  // naming it unprompted in an opening message. One function so the second can never
+  // become a weaker path than the first: same verification, same failure handling.
+  // Returns a reply ONLY when verification failed; null means carry on.
+  function verifyIfComplete () {
+    if (!session.filled.orderId || !session.filled.email) return null
+    if (session.grants.get('order')) return null
+
+    const v = verifyOwnership(db, session.filled.orderId, session.filled.email, clock())
+    if (!v.ok) {
+      // Mismatch and not-found produce the identical message — no enumeration oracle.
+      events.emit('auth.verification_failed', {})
+      session.filled = {}
+      session.pending = null
+      return reply(
+        "I couldn't match that order number and email. Want to try again, or shall I get a person?",
+        { chips: ['Try again', 'Talk to a human'] })
+    }
+    session.grants.mint(v.grant)
+    events.emit('auth.verified', { subject: v.grant.subject })
+    return null
+  }
+
+  // Slots a first message filled on its own. Identity only: these are the two the
+  // agent would otherwise ask for immediately, and the ones it is rudest to re-ask.
+  // Everything else still goes through the normal slot sequence.
+  function seedIdentity (found) {
+    let learned = false
+    if (!session.filled.orderId && found.orderIds[0]) {
+      session.filled.orderId = found.orderIds[0]
+      learned = true
+    }
+    if (!session.filled.email && found.emails[0]) {
+      session.filled.email = found.emails[0]
+      learned = true
+    }
+    return learned ? verifyIfComplete() : null
+  }
+
   function acceptSlot ({ filled, value }) {
     session.filled[filled] = value
 
-    // Identity is verified in CODE. The model has no part in minting a grant.
-    if (session.filled.orderId && session.filled.email && !session.grants.get('order')) {
-      const v = verifyOwnership(db, session.filled.orderId, session.filled.email, clock())
-      if (!v.ok) {
-        // Mismatch and not-found produce the identical message — no enumeration oracle.
-        events.emit('auth.verification_failed', {})
-        session.filled = {}
-        session.pending = null
-        return reply(
-          "I couldn't match that order number and email. Want to try again, or shall I get a person?",
-          { chips: ['Try again', 'Talk to a human'] })
-      }
-      session.grants.mint(v.grant)
-      events.emit('auth.verified', { subject: v.grant.subject })
-    }
+    const failed = verifyIfComplete()
+    if (failed) return failed
 
     const intent = session.pending.intent
     session.pending = null

@@ -1,0 +1,22 @@
+{
+  "name": "An order number given in the opening message is not asked for again",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "where is my order RO-10482",
+      "expect": {
+        "intentIs": "track_order",
+        "asks": "email"
+      }
+    },
+    {
+      "user": "lee.tanaka@example.com",
+      "expect": {
+        "status": "OK",
+        "cardKind": "order",
+        "replyMatches": "on the way"
+      }
+    }
+  ],
+  "finalStateDiff": []
+}
