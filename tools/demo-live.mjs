@@ -10,6 +10,7 @@ import { createDb } from '../src/backend/db.js'
 import { createAgent } from '../src/dialog/turn.js'
 import { PROMPTS } from '../src/ai/prompts.js'
 import { models } from '../src/config/models.js'
+import { callChain } from './providers.mjs'
 import { diff } from '../tests/harness.mjs'
 
 const env = Object.fromEntries(
@@ -32,26 +33,14 @@ const liveAdapter = {
     if (!PROMPTS[job]) return null
     calls++
     const { system, user } = PROMPTS[job](payload ?? {})
-    try {
-      const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          authorization: `Bearer ${env.GROQ_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: models.primary.id,
-          max_tokens: models.maxTokens[job] ?? 250,
-          temperature: 0.2,
-          messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-        }),
-      })
-      if (!r.ok) { console.log(dim(`      [${job} HTTP ${r.status}]`)); return null }
-      return (await r.json()).choices[0].message.content
-    } catch (e) {
-      console.log(dim(`      [${job} failed: ${e.message}]`))
-      return null
-    }
+    // Primary then fallback, by role, each against its own provider — the same chain
+    // api/llm.js runs. This tool used to call Groq's endpoint with models.primary.id,
+    // which broke silently the moment primary became a Gemini model.
+    const { text, errors } = await callChain([models.primary, models.fallback], {
+      system, user, maxTokens: models.maxTokens[job] ?? 250, env,
+    })
+    if (text === null) console.log(dim(`      [${job} unavailable — ${errors.join(' · ')}]`))
+    return text
   },
 }
 

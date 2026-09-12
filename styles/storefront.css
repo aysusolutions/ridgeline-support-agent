@@ -158,3 +158,60 @@
   padding: var(--sp-2) var(--sp-3);
 }
 .btn--ghost:hover { border-color: var(--beacon); color: var(--beacon-d); }
+
+/* ── Demo identities strip ───────────────────────────────────────────────────
+   Out-of-fiction by design: it sits above the wordmark, uses the mono face, and
+   carries none of the brand voice, so it reads as scaffolding around the demo
+   rather than as part of the store. Without it a visitor cannot get past the
+   agent's ownership check, which is the one thing the project most wants seen. */
+.demobar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-4);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--bg-sunk);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: var(--f-2xs);
+  color: var(--muted);
+}
+
+.demobar__lead { margin: 0; max-width: 52ch; }
+.demobar__lead strong { color: var(--text); }
+
+.demobar__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.demobar__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.demobar__cred {
+  padding: 2px var(--sp-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: inherit;
+  /* The visitor has to retype these, so let a double-click select one cleanly. */
+  user-select: all;
+}
+
+.demobar__hint { color: var(--muted); }
+.demobar__hint::before { content: "→ "; }
+
+@media (max-width: 640px) {
+  .demobar { gap: var(--sp-2); padding: var(--sp-3) var(--sp-4); }
+  .demobar__list { flex-direction: column; }
+}

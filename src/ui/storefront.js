@@ -33,6 +33,42 @@ function ridgeline () {
   return svg
 }
 
+// Out-of-fiction strip, deliberately outside the brand voice. Every order flow verifies
+// ownership before it reads a record, and a visitor cannot guess the email an order
+// belongs to — so without this the demo dead-ends on the agent's second question. That
+// verification is the point of the project; hiding the credentials only hides the point.
+//
+// Derived from the data rather than hardcoded: editing orders.json cannot leave this
+// banner quoting an order that no longer exists, or an email that no longer owns it.
+const DEMO_STATUSES = [
+  ['in_transit', 'track it'],
+  ['processing', 'cancel it'],
+  ['delivered', 'return an item'],
+]
+
+function demoBar (db) {
+  const orders = db.listOrderIds().map(id => db.getOrder(id)).filter(Boolean)
+  const picked = DEMO_STATUSES
+    .map(([status, hint]) => {
+      const o = orders.find(x => x.status === status)
+      return o ? { id: o.id, email: o.email, hint } : null
+    })
+    .filter(Boolean)
+
+  if (!picked.length) return null
+
+  return el('aside', { class: 'demobar', 'aria-label': 'Demo identities' },
+    el('p', { class: 'demobar__lead' },
+      el('strong', { text: 'Demo store.' }),
+      ' Nobody is signed in, so the agent asks who owns an order before it reads one. '
+      + 'Use one of these:'),
+    el('ul', { class: 'demobar__list' },
+      ...picked.map(d => el('li', { class: 'demobar__item' },
+        el('code', { class: 'demobar__cred', text: d.id }),
+        el('code', { class: 'demobar__cred', text: d.email }),
+        el('span', { class: 'demobar__hint', text: d.hint })))))
+}
+
 export function mountStorefront (root, db, { onOpenChat } = {}) {
   root.textContent = ''
 
@@ -83,5 +119,5 @@ export function mountStorefront (root, db, { onOpenChat } = {}) {
     el('span', { class: 'eyebrow',
       text: `Support ${brand.hours.tzLabel} Mon–Fri ${brand.hours.open}–${brand.hours.close}` }))
 
-  root.append(nav, hero, grid, foot)
+  root.append(...[demoBar(db), nav, hero, grid, foot].filter(Boolean))
 }

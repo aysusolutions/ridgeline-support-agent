@@ -4,6 +4,7 @@
 //   node tools/check-keys.mjs
 import { readFile } from 'node:fs/promises'
 import { models } from '../src/config/models.js'
+import { callOne, keyNameFor } from './providers.mjs'
 
 const ROOT = new URL('../', import.meta.url)
 
@@ -36,39 +37,27 @@ console.log(`GROQ_API_KEY    ${shape(env.GROQ_API_KEY)}`)
 console.log(`GEMINI_API_KEY  ${shape(env.GEMINI_API_KEY)}`)
 console.log('')
 
-async function checkGroq (key) {
-  if (!key) return 'skipped — no key'
-  const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: models.primary.id, max_tokens: 8, temperature: 0,
-      messages: [{ role: 'user', content: 'Reply with the single word: ok' }],
-    }),
-  })
-  if (!r.ok) return `HTTP ${r.status} — ${(await r.text()).slice(0, 160)}`
-  return `ok — replied "${(await r.json()).choices[0].message.content.trim()}"`
+// Probe each CONFIGURED entry against its own provider. Reading the provider off the
+// entry, rather than assuming primary means Groq, is what keeps this honest when the
+// roles are swapped in config.
+async function probe (cfg, env) {
+  const keyName = keyNameFor(cfg.provider)
+  if (!env[keyName]) return `skipped — no ${keyName}`
+  try {
+    const text = await callOne(cfg, {
+      system: 'Reply with the single word: ok',
+      user: 'ok',
+      maxTokens: 8,
+      env,
+    })
+    return `ok — replied "${text.trim()}"`
+  } catch (e) {
+    return e.message
+  }
 }
 
-async function checkGemini (key) {
-  if (!key) return 'skipped — no key'
-  const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/${models.fallback.id}:generateContent`
-  const r = await fetch(`${url}?key=${key}`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ role: 'user', parts: [{ text: 'Reply with the single word: ok' }] }],
-      generationConfig: { maxOutputTokens: 8, temperature: 0 },
-    }),
-  })
-  if (!r.ok) return `HTTP ${r.status} — ${(await r.text()).slice(0, 160)}`
-  const j = await r.json()
-  return `ok — replied "${(j.candidates?.[0]?.content?.parts?.[0]?.text ?? '').trim()}"`
+for (const [role, cfg] of [['primary', models.primary], ['fallback', models.fallback]]) {
+  console.log(`${role.padEnd(8)} ${cfg.provider} ${cfg.id}`)
+  console.log(`         ${await probe(cfg, env)}`)
+  console.log('')
 }
-
-console.log(`groq   ${models.primary.id}`)
-console.log(`       ${await checkGroq(env.GROQ_API_KEY)}`)
-console.log('')
-console.log(`gemini ${models.fallback.id}`)
-console.log(`       ${await checkGemini(env.GEMINI_API_KEY)}`)
