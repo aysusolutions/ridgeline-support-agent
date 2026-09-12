@@ -1,0 +1,19 @@
+{
+  "name": "Cancel is refused once the order has shipped",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "cancel my order"
+    },
+    {
+      "user": "RO-10482"
+    },
+    {
+      "user": "lee.tanaka@example.com",
+      "expect": {
+        "status": "REFUSED"
+      }
+    }
+  ],
+  "finalStateDiff": []
+}

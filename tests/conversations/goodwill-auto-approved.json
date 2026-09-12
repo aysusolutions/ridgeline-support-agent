@@ -1,0 +1,24 @@
+{
+  "name": "Goodwill credit inside the band is approved by code",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "i want to return this"
+    },
+    {
+      "user": "RO-10908"
+    },
+    {
+      "user": "tom.whitfield@example.com"
+    },
+    {
+      "user": "L1"
+    },
+    {
+      "user": "Changed my mind",
+      "expect": {
+        "replyMatches": "window closed July 24"
+      }
+    }
+  ]
+}

@@ -1,0 +1,160 @@
+.skip-link {
+  position: absolute; left: -9999px; top: var(--sp-2); z-index: 100;
+  background: var(--surface-2); color: var(--text);
+  padding: var(--sp-2) var(--sp-4); border: 1px solid var(--border-2);
+}
+.skip-link:focus { left: var(--sp-4); }
+
+/* ------------------------------------------------------------------------ top */
+
+.top {
+  display: flex; align-items: center; gap: var(--sp-6);
+  padding: var(--sp-4) var(--sp-6);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 20;
+}
+.wordmark {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--f-xl);
+  letter-spacing: var(--track-widest); text-transform: uppercase;
+  color: var(--text); text-decoration: none;
+}
+.top__nav { display: flex; gap: var(--sp-5); margin-left: auto; }
+.top__link {
+  font-family: var(--font-mono); font-size: var(--f-xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+  color: var(--muted); text-decoration: none; padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+.top__link:hover { color: var(--text); border-bottom-color: var(--beacon); }
+.top__meta { margin-left: var(--sp-4); }
+.top__meta { margin-left: var(--sp-4); }
+
+/* Theme control. Borrows the nav's mono-uppercase treatment so it reads as part of the
+   header furniture rather than a widget bolted on. The label is kept because an unlabelled
+   sun/moon glyph does not tell you whether it shows the current state or the next one. */
+.theme-toggle {
+  display: inline-flex; align-items: center; gap: var(--sp-2);
+  margin-left: var(--sp-4);
+  padding: var(--sp-1) var(--sp-3);
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--text); border-color: var(--border-2); }
+.theme-toggle__icon { font-size: var(--f-sm); line-height: 1; }
+/* The glyph is the one bit of colour: warm for light, cool for dark. */
+.theme-toggle[data-theme="light"] .theme-toggle__icon { color: var(--beacon); }
+.theme-toggle[data-theme="dark"] .theme-toggle__icon,
+.theme-toggle[data-theme="system"] .theme-toggle__icon { color: var(--lichen); }
+
+/* The nav and the location can go on a narrow screen; the theme control cannot, because
+   it is the only way back from a theme you did not want. */
+@media (max-width: 720px) {
+  .top__nav, .top__meta { display: none; }
+  .theme-toggle { margin-left: auto; }
+  .theme-toggle__text { display: none; }
+}
+
+/* ----------------------------------------------------------------------- hero */
+
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+
+.ridge {
+  position: absolute; inset: auto 0 0 0; width: 100%; height: 260px;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+.ridge__line { stroke: var(--spruce); stroke-width: 2.5; }
+.ridge__contour { stroke: var(--spruce); stroke-width: 1; opacity: .16; }
+
+.hero__body {
+  position: relative; z-index: 1;
+  padding: var(--sp-16) var(--sp-6) var(--sp-12);
+  max-width: 1180px; margin: 0 auto;
+}
+.hero__title {
+  font-size: clamp(2.75rem, 11vw, var(--f-4xl));
+  margin: var(--sp-3) 0 var(--sp-4);
+  display: grid; /* one line per span, tight leading */
+}
+.hero__accent { color: var(--spruce); }
+.hero__sub { color: var(--muted); max-width: 46ch; margin: 0 0 var(--sp-6); }
+.hero__cta { margin-top: var(--sp-2); }
+
+/* ---------------------------------------------------------------------- shelf */
+
+.shop { max-width: 1180px; margin: 0 auto; padding: var(--sp-12) var(--sp-6) var(--sp-16); }
+.shelf + .shelf { margin-top: var(--sp-12); }
+.shelf__head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: var(--sp-4); padding-bottom: var(--sp-3);
+  border-bottom: 2px solid var(--text);
+}
+.shelf__title { font-size: var(--f-2xl); letter-spacing: var(--track-tight); }
+
+.shelf__grid {
+  display: grid; gap: var(--sp-4); margin-top: var(--sp-5);
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+}
+
+.tile {
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); overflow: hidden;
+  transition: border-color .16s ease, transform .16s ease;
+}
+.tile:hover { border-color: var(--border-2); transform: translateY(-2px); }
+.tile.is-out { opacity: .62; }
+
+.tile__thumb { aspect-ratio: 4/3; border-bottom: 1px solid var(--border); }
+.tile__thumb--tents         { background: linear-gradient(150deg, #2f5f45, #7f9a6b); }
+.tile__thumb--sleeping-bags { background: linear-gradient(150deg, #3a4a63, #8a7f6b); }
+.tile__thumb--jackets       { background: linear-gradient(150deg, #40484f, #6d7f74); }
+.tile__thumb--packs         { background: linear-gradient(150deg, #4a4438, #8a9a5b); }
+.tile__thumb--boots         { background: linear-gradient(150deg, #4d3f34, #7d6a55); }
+
+.tile__name {
+  font-size: var(--f-lg); margin: var(--sp-3) var(--sp-3) var(--sp-1);
+  letter-spacing: 0;
+}
+/* The signature strip. */
+.tile__spec {
+  margin: 0 var(--sp-3); font-size: var(--f-2xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase; color: var(--muted);
+}
+.tile__foot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: auto; padding: var(--sp-3);
+}
+.tile__price { font-size: var(--f-lg); font-weight: 600; }
+.tile__stock { font-size: var(--f-2xs); color: var(--muted); }
+.tile__stock.is-out { color: var(--beacon-d); }
+
+.foot {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--sp-3);
+  padding: var(--sp-6); border-top: 1px solid var(--border); background: var(--bg-sunk);
+}
+
+/* --------------------------------------------------------------------- shared */
+
+.btn {
+  font-family: var(--font-mono); font-size: var(--f-xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+  padding: var(--sp-3) var(--sp-5); border-radius: var(--r-sm);
+  border: 1px solid transparent; cursor: pointer;
+  transition: background .14s ease, border-color .14s ease;
+}
+.btn--go { background: var(--beacon); border-color: var(--beacon); color: var(--on-beacon); }
+.btn--go:hover { background: var(--beacon-d); border-color: var(--beacon-d); }
+.btn--go:disabled { opacity: .5; cursor: default; }
+.btn--quiet { background: transparent; border-color: var(--border-2); color: var(--muted); }
+.btn--quiet:hover { color: var(--text); border-color: var(--text); }
+.btn--ghost {
+  background: transparent; border-color: var(--border-2); color: var(--text);
+  padding: var(--sp-2) var(--sp-3);
+}
+.btn--ghost:hover { border-color: var(--beacon); color: var(--beacon-d); }

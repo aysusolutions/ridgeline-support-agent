@@ -1,0 +1,26 @@
+{
+  "name": "A duplicate return surfaces the existing RMA",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "return an item"
+    },
+    {
+      "user": "RO-10119"
+    },
+    {
+      "user": "aiko.sato@example.com"
+    },
+    {
+      "user": "L1"
+    },
+    {
+      "user": "Defective",
+      "expect": {
+        "status": "REFUSED",
+        "replyMatches": "RMA-8842"
+      }
+    }
+  ],
+  "finalStateDiff": []
+}

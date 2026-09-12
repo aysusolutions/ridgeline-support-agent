@@ -1,0 +1,12 @@
+{
+  "name": "ridgeline-support-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A task-performing e-commerce support agent whose LLM can plan actions but never authorise them.",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node tests/run.mjs",
+    "serve": "node tools/serve.mjs"
+  }
+}

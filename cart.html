@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 img-src 'self' data:;
+                 style-src 'self';
+                 script-src 'self';
+                 connect-src 'self';
+                 base-uri 'none';
+                 form-action 'none';
+                 object-src 'none'">
+  <meta name="description" content="Ridgeline Outfitters — checkout.">
+  <meta name="theme-color" content="#1f3d2b">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <title>Checkout — Ridgeline Outfitters</title>
+  <!-- Applies the saved theme before first paint. A classic script, not a
+       module: modules are deferred and would flash. Not inline either — the
+       CSP is script-src 'self'. -->
+  <script src="./src/ui/theme-boot.js"></script>
+  <link rel="stylesheet" href="./styles/tokens.css">
+  <link rel="stylesheet" href="./styles/storefront.css">
+  <link rel="stylesheet" href="./styles/chat.css">
+  <link rel="stylesheet" href="./styles/cart.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div id="cart-root"></div>
+  <script type="module" src="./src/cart.js"></script>
+</body>
+</html>

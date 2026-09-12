@@ -1,0 +1,142 @@
+/* Design tokens only. No component styles in this file.
+   Register: technical outdoor equipment — trail signage and instrumentation, not
+   artisanal-rustic. Cold base, one signal colour reserved for action and alert. */
+
+:root {
+  /* Base */
+  --ink:      #12160f;   /* near-black with a green cast, never neutral */
+  --spruce:   #1f3d2b;   /* wet pine — primary structural colour */
+  --spruce-2: #2d5540;
+  --lichen:   #8a9a5b;   /* muted yellow-green, secondary and meta */
+  --canvas:   #eceee9;   /* weathered nylon, cooler than paper */
+  --slate:    #5b6670;
+
+  /* Signal. Used ONLY for action and alert — never as decoration. */
+  --beacon:   #ff5a1f;
+  --beacon-d: #d13f0c;
+
+  /* Semantic */
+  --bg:       var(--canvas);
+  --bg-sunk:  #e2e5df;
+  --surface:  #f7f8f5;
+  --surface-2:#ffffff;
+  --border:   #cdd2c8;
+  --border-2: #b3bbac;
+  --text:     var(--ink);
+  --muted:    var(--slate);
+  /* Foregrounds for the two coloured backgrounds. These exist because `background:
+     var(--spruce); color: var(--canvas)` looked fine in light and collapsed to 1.7:1 in
+     dark: --spruce inverts to a pale mint, --canvas never did, so it was light on light.
+     A background that changes with the theme needs a foreground that changes with it. */
+  --on-spruce: #eceee9;
+  --on-beacon: #12160f;   /* white on beacon measured 3.12:1 — under AA for body text */
+
+  --ok:       var(--spruce);
+  --warn:     #8a6417;
+  --danger:   #a4342a;
+
+  /* Space — 4px base */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px;
+  --sp-5:20px; --sp-6:24px; --sp-8:32px; --sp-10:40px; --sp-12:48px; --sp-16:64px;
+
+  /* Radius — small and technical. Gear is stitched, not rounded. */
+  --r-sm:3px; --r-md:5px; --r-lg:8px; --r-full:999px;
+
+  /* Type.
+     Display: condensed grotesque, uppercase, tight — trail signage.
+     Body:    system sans.
+     Mono:    every spec, price, ID and tracking number. This is the signature. */
+  --font-display: "Arial Narrow", "Helvetica Neue Condensed", "Liberation Sans Narrow",
+                  "Nimbus Sans Narrow", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  --f-2xs:.6875rem; --f-xs:.75rem; --f-sm:.8125rem; --f-md:.9375rem;
+  --f-lg:1.0625rem; --f-xl:1.375rem; --f-2xl:2rem; --f-3xl:3.25rem; --f-4xl:5.5rem;
+
+  --track-tight:-0.02em; --track-wide:0.08em; --track-widest:0.16em;
+
+  --shadow-sm: 0 1px 2px rgba(18,22,15,.08);
+  --shadow-md: 0 6px 20px rgba(18,22,15,.12);
+  --shadow-lg: 0 18px 48px rgba(18,22,15,.22);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --on-spruce:#12160f;   /* mint background wants dark ink */
+    --bg:#0e1210; --bg-sunk:#0a0d0b; --surface:#161c18; --surface-2:#1c231e;
+    --border:#2a332c; --border-2:#3b473e;
+    --text:#e4e8e0; --muted:#98a29a;
+    --spruce:#8fc4a4; --spruce-2:#6ba883; --lichen:#a8b877;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.5);
+    --shadow-md:0 6px 20px rgba(0,0,0,.55);
+    --shadow-lg:0 18px 48px rgba(0,0,0,.65);
+  }
+}
+
+:root[data-theme="light"] {
+  --on-spruce:#eceee9;
+  --bg:#eceee9; --bg-sunk:#e2e5df; --surface:#f7f8f5; --surface-2:#ffffff;
+  --border:#cdd2c8; --border-2:#b3bbac;
+  --text:#12160f; --muted:#5b6670;
+  --spruce:#1f3d2b; --spruce-2:#2d5540; --lichen:#8a9a5b;
+}
+:root[data-theme="dark"] {
+    --on-spruce:#12160f;   /* mint background wants dark ink */
+  --bg:#0e1210; --bg-sunk:#0a0d0b; --surface:#161c18; --surface-2:#1c231e;
+  --border:#2a332c; --border-2:#3b473e;
+  --text:#e4e8e0; --muted:#98a29a;
+  --spruce:#8fc4a4; --spruce-2:#6ba883; --lichen:#a8b877;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--f-md)/1.55 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-tight);
+  line-height: .92;
+  margin: 0;
+}
+
+/* The signature: any number a buyer would compare is set in mono. */
+.spec, .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--f-2xs);
+  letter-spacing: var(--track-widest);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+button { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--beacon);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important; scroll-behavior: auto !important;
+  }
+}

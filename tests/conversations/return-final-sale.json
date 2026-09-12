@@ -1,0 +1,26 @@
+{
+  "name": "A final-sale item is refused by policy",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "start a return"
+    },
+    {
+      "user": "RO-10733"
+    },
+    {
+      "user": "jules.moreau@example.com"
+    },
+    {
+      "user": "L1"
+    },
+    {
+      "user": "Changed my mind",
+      "expect": {
+        "status": "REFUSED",
+        "replyMatches": "final-sale"
+      }
+    }
+  ],
+  "finalStateDiff": []
+}

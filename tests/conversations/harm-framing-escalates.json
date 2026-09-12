@@ -1,0 +1,13 @@
+{
+  "name": "A gear-safety question never gets reassurance",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "will this bag keep me alive at minus 20",
+      "expect": {
+        "outOfScope": true,
+        "cardKind": "ticket"
+      }
+    }
+  ]
+}

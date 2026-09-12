@@ -1,0 +1,297 @@
+/* ------------------------------------------------------------------ launcher */
+
+.launcher {
+  position: fixed; right: var(--sp-6); bottom: var(--sp-6); z-index: 40;
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--spruce); color: var(--on-spruce);
+  border: none; border-radius: var(--r-full);
+  box-shadow: var(--shadow-md); cursor: pointer;
+  font-family: var(--font-mono); font-size: var(--f-xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.launcher:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.launcher__mark {
+  width: 14px; height: 10px;
+  clip-path: polygon(0 100%, 30% 30%, 52% 62%, 74% 0, 100% 100%);
+  background: var(--beacon);
+}
+
+/* --------------------------------------------------------------------- panel */
+
+.chat {
+  position: fixed; right: var(--sp-6); bottom: var(--sp-6); z-index: 45;
+  width: min(410px, calc(100vw - var(--sp-8)));
+  height: min(640px, calc(100vh - var(--sp-8)));
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg); overflow: hidden;
+}
+.chat[hidden] { display: none; }
+
+.chat__top {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--spruce); color: var(--on-spruce);
+}
+.chat__mark {
+  width: 20px; height: 14px; flex: none;
+  clip-path: polygon(0 100%, 30% 30%, 52% 62%, 74% 0, 100% 100%);
+  background: var(--beacon);
+}
+.chat__id { display: flex; flex-direction: column; margin-right: auto; line-height: 1.2; }
+.chat__name { font-family: var(--font-display); text-transform: uppercase;
+              letter-spacing: var(--track-wide); font-size: var(--f-md); }
+.chat__status { color: color-mix(in srgb, var(--canvas) 68%, transparent); }
+
+.icon {
+  background: transparent; border: none; cursor: pointer;
+  color: inherit; opacity: .75; padding: var(--sp-1) var(--sp-2);
+  font-family: var(--font-mono); font-size: var(--f-md);
+}
+.icon:hover { opacity: 1; }
+
+/* ------------------------------------------------------------------ messages */
+
+.chat__log {
+  flex: 1; overflow-y: auto; padding: var(--sp-4);
+  display: flex; flex-direction: column; gap: var(--sp-3);
+  background: var(--bg);
+}
+.msg { display: flex; max-width: 92%; }
+.msg--agent { align-self: flex-start; }
+.msg--user { align-self: flex-end; }
+.msg__body p { margin: 0 0 var(--sp-2); }
+.msg__body p:last-child { margin-bottom: 0; }
+
+.msg--agent .msg__body {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-left: 3px solid var(--spruce);
+  padding: var(--sp-3) var(--sp-4); border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+.msg--user .msg__body {
+  background: var(--spruce); color: var(--on-spruce);
+  padding: var(--sp-3) var(--sp-4); border-radius: var(--r-md);
+}
+.msg__body a { color: inherit; text-underline-offset: 2px; }
+
+.msg--typing { gap: 4px; padding: var(--sp-3) var(--sp-4); }
+.dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--muted);
+  animation: pulse 1.1s infinite ease-in-out;
+}
+.dot:nth-child(2) { animation-delay: .15s; }
+.dot:nth-child(3) { animation-delay: .3s; }
+@keyframes pulse { 0%,80%,100% { opacity:.25 } 40% { opacity:1 } }
+
+/* --------------------------------------------------------------------- cards */
+
+.card {
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: var(--sp-4); font-size: var(--f-sm);
+}
+.card__head { margin-bottom: var(--sp-3); }
+.card__title { font-size: var(--f-lg); margin-top: 2px; }
+.card__note { color: var(--muted); font-size: var(--f-xs); margin: var(--sp-3) 0 0; }
+.card__actions { display: flex; gap: var(--sp-2); margin-top: var(--sp-4); }
+
+.kvs { display: grid; gap: 2px; }
+.kv { display: flex; justify-content: space-between; gap: var(--sp-4); padding: 3px 0; }
+.kv__k { color: var(--muted); font-size: var(--f-xs); }
+.kv__v { font-size: var(--f-sm); }
+.kv--total { border-top: 1px solid var(--border); margin-top: var(--sp-2); padding-top: var(--sp-2); }
+.kv--total .kv__v { font-weight: 700; }
+/* The fee is shown as its own line, never buried in a net figure. */
+.kv--deduct .kv__v { color: var(--beacon-d); }
+
+/* shipment rail — a real sequence, so the ordering carries information */
+.rail { display: flex; list-style: none; margin: 0 0 var(--sp-4); padding: 0; }
+.rail__step { flex: 1; display: flex; flex-direction: column; gap: var(--sp-2); position: relative; }
+.rail__step::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 4px; height: 1px;
+  background: var(--border-2);
+}
+.rail__step:first-child::before { left: 50%; }
+.rail__step:last-child::before { right: 50%; }
+.rail__dot {
+  width: 9px; height: 9px; border-radius: 50%; position: relative; z-index: 1;
+  background: var(--bg); border: 1px solid var(--border-2); margin-left: calc(50% - 4px);
+}
+.rail__step.is-done .rail__dot { background: var(--spruce); border-color: var(--spruce); }
+.rail__step.is-now .rail__dot { background: var(--beacon); border-color: var(--beacon); }
+.rail__label {
+  font-family: var(--font-mono); font-size: var(--f-2xs); text-align: center;
+  letter-spacing: var(--track-wide); text-transform: uppercase; color: var(--muted);
+}
+.rail__step.is-now .rail__label { color: var(--text); }
+
+.lines { list-style: none; margin: var(--sp-3) 0; padding: 0; display: grid; gap: var(--sp-2); }
+.lines__item {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px var(--sp-3);
+  padding-bottom: var(--sp-2); border-bottom: 1px solid var(--border);
+}
+.lines__meta { grid-column: 1; font-size: var(--f-2xs); color: var(--muted); }
+.lines__price { grid-row: 1; grid-column: 2; }
+.tag {
+  grid-column: 1 / -1; justify-self: start;
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+  padding: 1px var(--sp-2); border-radius: var(--r-sm);
+  background: var(--bg-sunk); color: var(--muted);
+}
+
+/* third-party text, clearly fenced in the UI as well as in the kernel */
+.untrusted {
+  margin-top: var(--sp-3); padding: var(--sp-3);
+  border: 1px dashed var(--border-2); border-radius: var(--r-sm); background: var(--bg-sunk);
+}
+.untrusted__body {
+  margin: var(--sp-1) 0 0; font-size: var(--f-xs); color: var(--muted);
+  white-space: pre-wrap; word-break: break-word;
+}
+
+/* the gate */
+.card--confirm { border: 2px solid var(--beacon); background: var(--surface-2); }
+.confirm__line { margin: var(--sp-1) 0; font-size: var(--f-sm); }
+.confirm__warn {
+  margin: var(--sp-3) 0 0; font-family: var(--font-mono);
+  font-size: var(--f-2xs); letter-spacing: var(--track-wide);
+  text-transform: uppercase; color: var(--beacon-d);
+}
+
+/* products — a horizontal rail, not a stack.
+   Three stacked cards pushed the reply and the next question off screen; side by side they
+   read as a set you compare, which is what three results ARE. Card width is chosen so two
+   sit in view with the third peeking: the cut-off edge is what tells you it scrolls, and it
+   survives the panel being 410px or a phone's 100vw - 32px. */
+.products {
+  display: flex;
+  gap: var(--sp-3);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  /* Keep a flick from scrolling the transcript behind it. */
+  overscroll-behavior-x: contain;
+  /* Room for the focus ring, which a plain overflow container clips. */
+  padding: 2px 2px var(--sp-2);
+  margin: 0 -2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
+}
+.products::-webkit-scrollbar { height: 5px; }
+.products::-webkit-scrollbar-thumb { background: var(--muted); border-radius: var(--r-full); }
+.products::-webkit-scrollbar-track { background: transparent; }
+/* The rail is focusable so it can be scrolled from the keyboard. */
+.products:focus-visible { outline: 2px solid var(--beacon-a, currentColor); outline-offset: 2px; }
+
+.product {
+  /* 150px left only 8px of the third card showing, which reads as a clipping bug rather
+     than as "there is more". A percentage basis keeps a real ~30px peek whether the panel
+     is 410px or a phone's 100vw - 32px; the clamp stops the card collapsing on a narrow
+     screen or ballooning on a wide one. */
+  /* Floor is 118px, not 130px: on a 375px phone the rail is 299px wide, 42% of that is
+     126px, and a 130px floor clamped it UP — which pushed the third card off and left a
+     15px sliver again. The floor must not bind at the narrowest size we support. */
+  flex: 0 0 clamp(118px, 42%, 158px);
+  scroll-snap-align: start;
+  /* A column, so the thumb sits above the text instead of beside it, and so the button
+     can be pushed to the bottom — cards in a rail stretch to the tallest one, and a
+     button floating mid-card in the short ones looks broken. */
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.product__body { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.product.is-out { opacity: .6; }
+/* Was a 56px square beside the text; full width above it in a narrow card. Kept shallow
+   on purpose — these are decorative gradients, not photographs, and 4/3 made the card
+   247px tall in a panel that also has to hold the reply and the composer. */
+.product__thumb { aspect-ratio: 16 / 9; border-radius: var(--r-sm); }
+.product__thumb--tents         { background: linear-gradient(150deg, #2f5f45, #7f9a6b); }
+.product__thumb--sleeping-bags { background: linear-gradient(150deg, #3a4a63, #8a7f6b); }
+.product__thumb--jackets       { background: linear-gradient(150deg, #40484f, #6d7f74); }
+.product__thumb--packs         { background: linear-gradient(150deg, #4a4438, #8a9a5b); }
+.product__thumb--boots         { background: linear-gradient(150deg, #4d3f34, #7d6a55); }
+/* --f-md wrapped to three lines in a 150px card. Two lines, then ellipsis. */
+.product__name {
+  margin: 0; font-size: var(--f-sm); line-height: 1.25;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.product__spec {
+  margin: 2px 0; font-size: var(--f-2xs); color: var(--muted);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+}
+.product__foot {
+  display: flex; gap: var(--sp-2); align-items: baseline; flex-wrap: wrap;
+  margin-top: var(--sp-1);
+}
+.product__price { font-weight: 700; }
+.product__stock { font-size: var(--f-2xs); color: var(--muted); }
+.product__stock.is-out { color: var(--beacon-d); }
+/* Column 2 no longer exists — the card is one column now. margin-top:auto keeps every
+   button on the same baseline however tall the name and spec strip turn out. */
+.product__pick { width: 100%; margin-top: auto; }
+
+/* comparison — the winning cell is the only place beacon appears in a card body */
+.cmp { display: grid; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.cmp__row { display: grid; grid-template-columns: 5.5rem repeat(auto-fit, minmax(0, 1fr)); gap: 1px; }
+.cmp__label, .cmp__cell { background: var(--surface-2); padding: var(--sp-2); font-size: var(--f-xs); }
+.cmp__label {
+  font-family: var(--font-mono); color: var(--muted);
+  letter-spacing: var(--track-wide); text-transform: uppercase; font-size: var(--f-2xs);
+}
+.cmp__cell--name { font-weight: 700; font-family: var(--font-body); }
+.cmp__cell.is-winner { background: var(--beacon); color: var(--on-beacon); font-weight: 700; }
+
+.faq__answer { margin: var(--sp-1) 0; }
+.faq__src { font-size: var(--f-2xs); color: var(--muted); }
+
+/* --------------------------------------------------------------- chips + form */
+
+.chat__chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); padding: 0 var(--sp-4) var(--sp-3); }
+.chat__chips:empty { display: none; }
+.chip {
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase;
+  padding: var(--sp-2) var(--sp-3); border-radius: var(--r-full);
+  background: transparent; border: 1px solid var(--border-2); color: var(--muted);
+  cursor: pointer;
+}
+.chip:hover { border-color: var(--spruce); color: var(--spruce); }
+
+.csat { display: flex; align-items: center; gap: var(--sp-2); padding: 0 var(--sp-1); }
+.icon--csat { color: var(--muted); font-size: var(--f-sm); }
+.icon--csat:hover { color: var(--beacon); }
+
+.chat__form {
+  display: flex; gap: var(--sp-2); padding: var(--sp-3);
+  border-top: 1px solid var(--border); background: var(--surface);
+}
+.chat__input {
+  flex: 1; padding: var(--sp-3); font: var(--f-sm) var(--font-body);
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border-2); border-radius: var(--r-sm);
+}
+.chat__input::placeholder { color: var(--muted); }
+.chat__input:disabled { opacity: .6; }
+
+@media (max-width: 520px) {
+  .chat { right: 0; bottom: 0; width: 100vw; height: 100dvh; border-radius: 0; border: none; }
+  .launcher { right: var(--sp-4); bottom: var(--sp-4); }
+}
+
+/* A resumed conversation. Marked so an earlier exchange is never mistaken for something
+   the agent just said. */
+.chat__divider {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: var(--sp-4) 0 var(--sp-2);
+  color: var(--muted);
+}
+.chat__divider::before,
+.chat__divider::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--border);
+}

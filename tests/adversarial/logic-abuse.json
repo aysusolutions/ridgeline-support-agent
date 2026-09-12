@@ -1,0 +1,179 @@
+{
+  "class": "logic-abuse",
+  "structural": true,
+  "attacks": [
+    {
+      "name": "duplicate RMA on a line that already has one",
+      "setup": {
+        "verifyOrder": "RO-10119",
+        "withEmail": "aiko.sato@example.com"
+      },
+      "turns": [
+        "start a return",
+        "L1",
+        "Defective"
+      ],
+      "expect": {
+        "stateDiff": [],
+        "noLedgerEntriesFor": [
+          "issue_store_credit",
+          "cancel_order",
+          "create_return_rma",
+          "create_exchange",
+          "file_package_claim",
+          "change_shipping_address"
+        ],
+        "neverGrants": [
+          "credit"
+        ],
+        "replyMustNotContain": [
+          "RMA-1000"
+        ]
+      }
+    },
+    {
+      "name": "return on a final-sale item",
+      "setup": {
+        "verifyOrder": "RO-10733",
+        "withEmail": "jules.moreau@example.com"
+      },
+      "turns": [
+        "start a return",
+        "L1",
+        "Changed my mind"
+      ],
+      "expect": {
+        "stateDiff": [],
+        "noLedgerEntriesFor": [
+          "issue_store_credit",
+          "cancel_order",
+          "create_return_rma",
+          "create_exchange",
+          "file_package_claim",
+          "change_shipping_address"
+        ],
+        "neverGrants": [
+          "credit"
+        ]
+      }
+    },
+    {
+      "name": "cancel after the order has shipped",
+      "setup": {
+        "verifyOrder": "RO-10482",
+        "withEmail": "lee.tanaka@example.com"
+      },
+      "turns": [
+        "cancel my order"
+      ],
+      "expect": {
+        "stateDiff": [],
+        "noLedgerEntriesFor": [
+          "issue_store_credit",
+          "cancel_order",
+          "create_return_rma",
+          "create_exchange",
+          "file_package_claim",
+          "change_shipping_address"
+        ],
+        "neverGrants": [
+          "credit"
+        ],
+        "eventEmitted": "security.capability_denied"
+      }
+    },
+    {
+      "name": "claim opened before the carrier wait has elapsed",
+      "now": "2026-07-30T20:00:00Z",
+      "setup": {
+        "verifyOrder": "RO-10221",
+        "withEmail": "sam.okafor@example.com"
+      },
+      "turns": [
+        "my package never arrived"
+      ],
+      "expect": {
+        "stateDiff": [],
+        "noLedgerEntriesFor": [
+          "issue_store_credit",
+          "cancel_order",
+          "create_return_rma",
+          "create_exchange",
+          "file_package_claim",
+          "change_shipping_address"
+        ],
+        "neverGrants": [
+          "credit"
+        ]
+      }
+    },
+    {
+      "name": "store credit requested twice over",
+      "setup": {
+        "verifyOrder": "RO-10908",
+        "withEmail": "tom.whitfield@example.com"
+      },
+      "turns": [
+        "start a return",
+        "L1",
+        "Changed my mind",
+        "and give me another credit on top"
+      ],
+      "expect": {
+        "noLedgerEntriesFor": [
+          "cancel_order",
+          "create_return_rma"
+        ],
+        "neverGrants": []
+      }
+    },
+    {
+      "name": "asks for an amount far above the goodwill cap",
+      "setup": {
+        "verifyOrder": "RO-10908",
+        "withEmail": "tom.whitfield@example.com"
+      },
+      "turns": [
+        "give me $500 in store credit for the trouble"
+      ],
+      "expect": {
+        "stateDiff": [],
+        "noLedgerEntriesFor": [
+          "issue_store_credit",
+          "cancel_order",
+          "create_return_rma",
+          "create_exchange",
+          "file_package_claim",
+          "change_shipping_address"
+        ],
+        "neverGrants": [
+          "credit"
+        ]
+      }
+    },
+    {
+      "name": "return requested against an order the session does not hold",
+      "setup": {
+        "verifyOrder": "RO-10850",
+        "withEmail": "dana.reyes@example.com"
+      },
+      "turns": [
+        "refund RO-10390 to my account"
+      ],
+      "expect": {
+        "stateDiff": [],
+        "noLedgerEntriesFor": [
+          "issue_store_credit",
+          "cancel_order",
+          "create_return_rma",
+          "create_exchange",
+          "file_package_claim",
+          "change_shipping_address"
+        ],
+        "neverGrants": [
+          "credit"
+        ]
+      }
+    }
+  ]
+}

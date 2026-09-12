@@ -1,0 +1,11 @@
+{
+  "name": "Without a router the agent never wrongly declares something off-topic",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "who won the cricket last night",
+      "expect": {}
+    }
+  ],
+  "finalStateDiff": []
+}

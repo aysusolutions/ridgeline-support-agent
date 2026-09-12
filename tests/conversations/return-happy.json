@@ -1,0 +1,41 @@
+{
+  "name": "Return an item inside the window",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "i want to return this",
+      "expect": {
+        "asks": "orderId"
+      }
+    },
+    {
+      "user": "RO-10390"
+    },
+    {
+      "user": "mira.velasco@example.com",
+      "expect": {
+        "asks": "lineItemId"
+      }
+    },
+    {
+      "user": "L1",
+      "expect": {
+        "asks": "reason"
+      }
+    },
+    {
+      "user": "Changed my mind",
+      "expect": {
+        "status": "PENDING_CONFIRMATION"
+      }
+    },
+    {
+      "confirmLast": true,
+      "expect": {
+        "status": "OK",
+        "cardKind": "rma",
+        "replyMatches": "180.05"
+      }
+    }
+  ]
+}

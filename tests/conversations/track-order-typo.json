@@ -1,0 +1,19 @@
+{
+  "name": "Order tracking with a mistyped number",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "track my order"
+    },
+    {
+      "user": "RO-10483"
+    },
+    {
+      "user": "lee.tanaka@example.com",
+      "expect": {
+        "replyMatches": "couldn't match"
+      }
+    }
+  ],
+  "finalStateDiff": []
+}

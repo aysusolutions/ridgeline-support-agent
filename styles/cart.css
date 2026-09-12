@@ -1,0 +1,54 @@
+/* The checkout page. Everything structural — .card, .lines, .kv, .btn — is borrowed from
+   the storefront and chat sheets; only the page frame and the variant pickers are new. */
+
+.cart {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: var(--sp-6) var(--sp-4) var(--sp-8);
+}
+
+.cart .card {
+  padding: var(--sp-5);
+}
+
+.cart__lines {
+  display: grid;
+  gap: var(--sp-4);
+  margin: var(--sp-4) 0;
+}
+
+.cart__line + .cart__line {
+  border-top: 1px solid var(--border);
+  padding-top: var(--sp-4);
+}
+
+.cart__variants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.field__input {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm, 6px);
+  padding: 6px 10px;
+  min-width: 7rem;
+}
+
+.field__input:focus-visible {
+  outline: 2px solid var(--beacon);
+  outline-offset: 1px;
+}
+
+.card--notice .card__title {
+  margin-bottom: var(--sp-2);
+}

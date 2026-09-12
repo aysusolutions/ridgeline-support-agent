@@ -1,0 +1,19 @@
+{
+  "name": "Email mismatch and not-found read identically",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "where is my order"
+    },
+    {
+      "user": "RO-10850"
+    },
+    {
+      "user": "attacker@example.com",
+      "expect": {
+        "replyMatches": "couldn't match"
+      }
+    }
+  ],
+  "finalStateDiff": []
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Delivered but not received opens a claim",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "my package is missing"
+    },
+    {
+      "user": "RO-10221"
+    },
+    {
+      "user": "sam.okafor@example.com",
+      "expect": {
+        "status": "PENDING_CONFIRMATION"
+      }
+    },
+    {
+      "confirmLast": true,
+      "expect": {
+        "status": "OK",
+        "cardKind": "claim"
+      }
+    }
+  ]
+}

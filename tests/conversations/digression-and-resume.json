@@ -1,0 +1,24 @@
+{
+  "name": "A policy question mid-flow, then the agent resumes",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "cancel my order",
+      "expect": {
+        "asks": "orderId"
+      }
+    },
+    {
+      "user": "wait, how long do i have to return something",
+      "expect": {
+        "replyMatches": "30 days"
+      }
+    },
+    {
+      "user": "RO-10850",
+      "expect": {
+        "asks": "email"
+      }
+    }
+  ]
+}

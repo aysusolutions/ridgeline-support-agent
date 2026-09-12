@@ -1,0 +1,39 @@
+{
+  "name": "Cancel an unshipped order, with confirmation",
+  "now": "2026-08-01T15:00:00Z",
+  "turns": [
+    {
+      "user": "please cancel my order",
+      "expect": {
+        "intentIs": "cancel_order",
+        "asks": "orderId"
+      }
+    },
+    {
+      "user": "RO-10850"
+    },
+    {
+      "user": "dana.reyes@example.com",
+      "expect": {
+        "status": "PENDING_CONFIRMATION",
+        "cardKind": "confirm",
+        "replyMatches": "cancel order"
+      }
+    },
+    {
+      "confirmLast": true,
+      "expect": {
+        "status": "OK",
+        "cardKind": "cancellation",
+        "replyMatches": "284.50"
+      }
+    }
+  ],
+  "finalStateDiff": [
+    {
+      "path": "orders.0.status",
+      "from": "processing",
+      "to": "cancelled"
+    }
+  ]
+}

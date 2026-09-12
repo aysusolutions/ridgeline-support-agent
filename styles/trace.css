@@ -1,0 +1,107 @@
+/* The trace panel. Instrument-panel register: mono throughout, dense, no ornament.
+   It should look like something you read, not something you admire. */
+
+.tracepanel {
+  position: fixed; inset: 0 auto 0 0; z-index: 50;
+  width: min(520px, 100vw);
+  display: flex; flex-direction: column;
+  background: var(--surface); border-right: 1px solid var(--border-2);
+  box-shadow: var(--shadow-lg);
+}
+.tracepanel[hidden] { display: none; }
+
+.tracepanel__top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--ink); color: var(--canvas);
+  border-bottom: 1px solid var(--border-2);
+}
+.tracepanel__top .eyebrow { color: var(--canvas); }
+
+.tr__body { flex: 1; overflow-y: auto; padding: var(--sp-4); }
+.tr { display: grid; gap: var(--sp-5); }
+.tr__empty { color: var(--muted); font-size: var(--f-sm); }
+
+.tr__sec { display: grid; gap: var(--sp-2); }
+.tr__h {
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+  letter-spacing: var(--track-widest); text-transform: uppercase;
+  color: var(--muted); margin: 0;
+  padding-bottom: var(--sp-2); border-bottom: 1px solid var(--border);
+}
+
+.tr__pre {
+  margin: 0; padding: var(--sp-3);
+  background: var(--bg-sunk); border: 1px solid var(--border); border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: var(--f-2xs); line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word;
+  max-height: 240px; overflow: auto;
+}
+
+.tr__kv { display: grid; gap: var(--sp-1); }
+.tr__kv > span {
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+  letter-spacing: var(--track-wide); text-transform: uppercase; color: var(--muted);
+}
+
+.tr__note { margin: 0; font-size: var(--f-xs); color: var(--muted); }
+.tr__ok, .tr__fail {
+  margin: 0; font-size: var(--f-xs); display: flex; gap: var(--sp-2); align-items: baseline;
+}
+.tr__ok { color: var(--spruce); }
+.tr__fail { color: var(--beacon-d); }
+.tr__ok b, .tr__fail b { font-family: var(--font-mono); }
+
+/* the eight gates */
+.tr__gates { display: flex; flex-wrap: wrap; gap: 3px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px var(--sp-2); border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+  border: 1px solid var(--border-2); background: var(--bg-sunk); color: var(--muted);
+}
+.pill b { font-weight: 700; }
+.pill i { font-style: normal; letter-spacing: var(--track-wide); text-transform: uppercase; }
+.pill.is-pass { background: color-mix(in srgb, var(--spruce) 14%, transparent);
+                border-color: var(--spruce); color: var(--spruce); }
+.pill.is-fail { background: var(--beacon); border-color: var(--beacon); color: var(--on-beacon); }
+.pill.is-hold { background: color-mix(in srgb, var(--warn) 18%, transparent);
+                border-color: var(--warn); color: var(--warn); }
+.pill.is-skip { opacity: .55; }
+.pill.is-idle { opacity: .35; }
+
+.tr__step {
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  background: var(--surface-2); overflow: hidden;
+}
+.tr__step.is-fail { border-color: var(--beacon); }
+.tr__stephead {
+  display: flex; gap: var(--sp-2); align-items: baseline;
+  padding: var(--sp-2) var(--sp-3); background: var(--bg-sunk);
+  border-bottom: 1px solid var(--border);
+}
+.tr__stepid {
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+  color: var(--muted); text-transform: uppercase;
+}
+.tr__steptool { font-family: var(--font-mono); font-size: var(--f-xs); font-weight: 700; }
+.tr__stepbody { display: grid; gap: var(--sp-3); padding: var(--sp-3); }
+
+.tr__flags { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+
+.tr__ledger, .tr__events {
+  list-style: none; margin: 0; padding: 0; display: grid; gap: var(--sp-1);
+  font-family: var(--font-mono); font-size: var(--f-2xs);
+}
+.tr__events li { color: var(--muted); word-break: break-word; }
+.tr__events li.is-sec { color: var(--beacon-d); }
+
+/* Make room for the panel on wide screens so it does not cover the chat. */
+:root.has-trace .chat, :root.has-trace .launcher { right: var(--sp-6); }
+@media (min-width: 1100px) {
+  :root.has-trace body { padding-left: 520px; }
+  :root.has-trace .tracepanel { box-shadow: none; }
+}
+@media (max-width: 560px) {
+  .tracepanel { width: 100vw; }
+}

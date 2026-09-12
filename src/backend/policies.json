@@ -1,0 +1,22 @@
+{
+  "returnWindowDays": 30,
+  "exchangeWindowDays": 45,
+  "returnShippingPaidBy": {
+    "defective": "merchant",
+    "wrongItem": "merchant",
+    "notAsDescribed": "merchant",
+    "wrongSize": "customer",
+    "changedMind": "customer"
+  },
+  "changedMindReturnShippingFeeCents": 895,
+  "warrantyMonths": 24,
+  "nonReturnableTags": ["final-sale", "clearance", "gift-card"],
+  "missingPackageWaitHours": 24,
+  "cancelWindow": { "requiresUnshipped": true },
+  "rescheduleMaxDaysAhead": 10,
+  "goodwill": {
+    "autoApproveMaxCents": 2500,
+    "autoApproveMaxDaysPastWindow": 14,
+    "requiresHumanAbove": true
+  }
+}
